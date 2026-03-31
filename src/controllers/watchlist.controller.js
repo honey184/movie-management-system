@@ -43,8 +43,6 @@ exports.clearWatchlist = asyncHandler(async (req, res) => {
 });
 
 exports.getRecommendations = asyncHandler(async (req, res) => {
-    console.log("🔥 Recommendations API HIT");
-
     const data = await watchlistService.getRecommendations(req.user._id);
 
     res.status(200).json({

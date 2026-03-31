@@ -75,31 +75,42 @@ exports.clearWatchlist = async (userId) => {
 
 exports.getRecommendations = async (userId) => {
 
-    const watched = await Watchlist.findOne({ userId }).populate("movieIds", "genre").select('movieIds')
+    const cacheKey = `recommendations:${userId}`;
+    const cached = await redisClient.get(cacheKey);
+    if (cached) return JSON.parse(cached);
 
-    console.log("🚀 ~ watched:", watched)
+    const watchlist = await Watchlist.findOne({ userId }).populate(
+        'movieIds',
+        'genre'
+    );
 
-    const genres = []
+    if (!watchlist || watchlist.movieIds.length === 0) {
 
-    watched.movieIds.forEach(element => {
-        for (let i of element.genre) {
-            genres.push(i)
-        }
-    })
+        const topRated = await Movie.find({ ratingsCount: { $gte: 5 } })
+            .sort({ ratingsAvg: -1 })
+            .limit(10)
+            .select('title genre releaseYear ratingsAvg ratingsCount');
+        return { source: 'top-rated', movies: topRated };
+    }
 
-    console.log("🚀 ~ genres:", genres)
+    const genres = [
+        ...new Set(watchlist.movieIds.flatMap((m) => m.genre)),
+    ];
 
+
+    const watchedIds = watchlist.movieIds.map((m) => m._id);
 
     const recommendations = await Movie.find({
-        genre: { $in: genres }
-    }).limit(10)
+        genre: { $in: genres },
+        _id: { $nin: watchedIds },
+        ratingsCount: { $gte: 2 },
+    })
+        .sort({ ratingsAvg: -1 })
+        .limit(10)
+        .select('title genre releaseYear ratingsAvg ratingsCount');
 
-    if (recommendations.length == 0) return console.log("no recommendation");
+    const result = { source: 'genre-based', genres, movies: recommendations };
+    await redisClient.setEx(cacheKey, CACHE_TTL * 5, JSON.stringify(result));
+    return result;
 
-    console.log("🚀 ~ recommendations:", recommendations)
-
-
-    const result = { source: 'genre-based', genres, movies: recommendations, };
-    return result
-
-}
+};
