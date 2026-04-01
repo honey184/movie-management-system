@@ -1,5 +1,5 @@
 
-
+const recommendationQueue = require('../queues/recommendation.queue');
 const watchlistService = require('../services/watchlist.service');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -19,6 +19,11 @@ exports.addToWatchlist = asyncHandler(async (req, res) => {
     }
 
     const data = await watchlistService.addToWatchlist(req.user._id, movieId);
+
+    await recommendationQueue.add({
+        userId: req.user.id
+    });
+
     res.status(200).json({ success: true, data });
 });
 
