@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Movie = require('./models/movie.model');
 const User = require('./models/user.model');
-const Admin = require('./models/admin.model');
 const Review = require('./models/review.model');
 const Watchlist = require('./models/watchlist.model');
 
@@ -28,16 +27,6 @@ async function seed() {
         Review.deleteMany(),
         Watchlist.deleteMany(),
     ]);
-
-    // ── Create default admin ────────────────────────────────────────
-    console.log('Creating admin...');
-    await Admin.create({
-        name: 'Super Admin',
-        email: 'admin@gmail.com',
-        password: 'Honey@123',
-        role: 'admin',
-    });
-    console.log('Admin → email: admin@movies.com | password: admin123');
 
     // ── Create 10 test users ────────────────────────────────────────
     console.log('👥 Creating test users...');
@@ -119,7 +108,6 @@ async function seed() {
 
     console.log('\nSeeding complete!');
     console.log('─────────────────────────────────────');
-    console.log('Admin   → admin@movies.com / admin123');
     console.log('Users   → user1@movies.com / user1234');
     console.log('Movies  → 50,000 records');
     console.log('─────────────────────────────────────');

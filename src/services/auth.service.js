@@ -1,5 +1,4 @@
 const User = require("../models/user.model");
-const Admin = require("../models/admin.model");
 const generateToken = require("../utils/generateToken");
 
 
@@ -25,14 +24,7 @@ exports.registerUser = async (data) => {
 
 exports.login = async (email, password) => {
 
-    let account
-
-    if (email == "admin@gmail.com") {
-        account = await Admin.findOne({ email })
-    } else {
-        account = await User.findOne({ email });
-    }
-
+    let account = await User.findOne({ email });
 
     if (!account) {
         const error = new Error("Invalid credentials");
