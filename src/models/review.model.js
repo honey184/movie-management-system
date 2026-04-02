@@ -34,8 +34,6 @@ const reviewSchema = new mongoose.Schema(
     }
 );
 
-reviewSchema.index({ userId: 1, movieId: 1 }, { unique: true });
-reviewSchema.index({ movieId: 1 });  // fast lookup by movie
 
 
 reviewSchema.statics.updateMovieRatings = async function (movieId) {
@@ -68,5 +66,8 @@ reviewSchema.post('save', function () {
 reviewSchema.post('findOneAndDelete', function (doc) {
     if (doc) doc.constructor.updateMovieRatings(doc.movieId);
 });
+
+reviewSchema.index({ userId: 1, movieId: 1 }, { unique: true });
+reviewSchema.index({ movieId: 1 });  // fast lookup by movie
 
 module.exports = mongoose.model("Review", reviewSchema);

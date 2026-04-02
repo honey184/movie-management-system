@@ -1,9 +1,12 @@
 const asyncHandler = require("../utils/asyncHandler");
 const reviewService = require("../services/review.service");
+const analyticsQueue = require("../queues/analytics.queue");
 
 exports.createReview = asyncHandler(async (req, res) => {
 
     const review = await reviewService.createReview(req.body, req.user.id);
+
+    await analyticsQueue.add();
 
     res.status(201).json({
         success: true,
