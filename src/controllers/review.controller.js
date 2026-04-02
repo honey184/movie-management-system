@@ -31,6 +31,8 @@ exports.updateReview = asyncHandler(async (req, res) => {
 
     const review = await reviewService.updateReview(req.params.id, req.user._id, req.body);
 
+    await analyticsQueue.add();
+
     res.status(200).json({
         success: true,
         review
@@ -41,6 +43,9 @@ exports.updateReview = asyncHandler(async (req, res) => {
 exports.deleteReview = asyncHandler(async (req, res) => {
 
     await reviewService.deleteReview(req.params.id, req.user._id, req.user.role);
+
+    await analyticsQueue.add();
+
 
     res.status(200).json({
         success: true,
