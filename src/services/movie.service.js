@@ -1,5 +1,5 @@
 const Movie = require('../models/movie.model');
-const mongoose = require('mongoose')
+const Review = require('../models/review.model');
 const ApiFeatures = require('../utils/apiFeatures');
 const { redisClient } = require('../config/db');
 
@@ -127,6 +127,8 @@ exports.updateMovie = async (id, data) => {
 exports.deleteMovie = async (id) => {
 
     const movie = await Movie.findByIdAndDelete(id);
+
+    await Review.deleteMany({ movieId: id });
 
     if (!movie) throw { statusCode: 404, message: 'Movie not found' };
 

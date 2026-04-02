@@ -1,5 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler");
 const movieService = require("../services/movie.service");
+const analyticsQueue = require("../queues/analytics.queue");
+
 
 
 exports.createMovie = asyncHandler(async (req, res) => {
@@ -59,6 +61,8 @@ exports.updateMovie = asyncHandler(async (req, res) => {
 exports.deleteMovie = asyncHandler(async (req, res) => {
 
     await movieService.deleteMovie(req.params.id);
+
+    await analyticsQueue.add();
 
     res.status(200).json({
         success: true,
