@@ -1,6 +1,7 @@
 const Watchlist = require('../models/watchlist.model');
 const Movie = require('../models/movie.model');
 const { redisClient } = require('../config/db');
+const objectIdValidator = require('../utils/objectidValidate');
 
 const CACHE_TTL = parseInt(process.env.REDIS_TTL) || 60;
 
@@ -46,6 +47,8 @@ exports.addToWatchlist = async (userId, movieId) => {
 
 
 exports.removeFromWatchlist = async (userId, movieId) => {
+
+    await objectIdValidator(movieId);
 
     const watchlist = await Watchlist.findOneAndUpdate(
         { userId },

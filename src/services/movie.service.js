@@ -2,6 +2,7 @@ const Movie = require('../models/movie.model');
 const Review = require('../models/review.model');
 const ApiFeatures = require('../utils/apiFeatures');
 const { redisClient } = require('../config/db');
+const objectIdValidator = require('../utils/objectidValidate');
 
 const CACHE_TTL = parseInt(process.env.REDIS_TTL) || 60;
 
@@ -79,6 +80,8 @@ exports.searchMovies = async (queryString) => {
 
 exports.getMovieById = async (id) => {
 
+    await objectIdValidator(id);
+
     const cacheKey = `movies:id:${id}`;
     const cached = await getCached(cacheKey);
     if (cached) return cached;
@@ -110,6 +113,8 @@ exports.createMovie = async (data) => {
 
 exports.updateMovie = async (id, data) => {
 
+    await objectIdValidator(id);
+
     const movie = await Movie.findByIdAndUpdate(id, data, {
         new: true,
         runValidators: true,
@@ -126,6 +131,7 @@ exports.updateMovie = async (id, data) => {
 
 exports.deleteMovie = async (id) => {
 
+    await objectIdValidator(id);
     const movie = await Movie.findByIdAndDelete(id);
 
     await Review.deleteMany({ movieId: id });

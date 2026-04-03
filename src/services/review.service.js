@@ -3,6 +3,7 @@ const Movie = require('../models/movie.model');
 const ApiFeatures = require('../utils/apiFeatures');
 const { redisClient } = require('../config/db');
 const mongoose = require('mongoose')
+const objectIdValidator = require('../utils/objectidValidate');
 
 const CACHE_TTL = parseInt(process.env.REDIS_TTL) || 60;
 
@@ -18,6 +19,8 @@ const clearReviewCache = async (movieId) => {
 
 
 exports.getMovieReviews = async (movieId, queryString) => {
+
+    await objectIdValidator(movieId);
 
     const cacheKey = `reviews:${movieId}:${JSON.stringify(queryString)}`;
     const cached = await redisClient.get(cacheKey);
@@ -61,6 +64,8 @@ exports.createReview = async (data, userId) => {
 
 exports.updateReview = async (reviewId, userId, data) => {
 
+    await objectIdValidator(reviewId);
+
     const review = await Review.findOne({
         _id: new mongoose.Types.ObjectId(reviewId),
         userId
@@ -76,6 +81,8 @@ exports.updateReview = async (reviewId, userId, data) => {
 };
 
 exports.deleteReview = async (reviewId, userId, role) => {
+
+    await objectIdValidator(reviewId);
 
     const filter = role === 'admin' ? { _id: reviewId } : { _id: reviewId, userId };
     const review = await Review.findOneAndDelete(filter);
