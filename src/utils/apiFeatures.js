@@ -38,21 +38,65 @@ class ApiFeatures {
 
 
     sort() {
+
+        const allowedSortFields = [
+            "releaseYear",
+            "ratingAvg",
+            "ratingsCount",
+        ];
+
         if (this.queryString.sort) {
-            const sortBy = this.queryString.sort.split(',').join(' ');
+
+            const fields = this.queryString.sort.split(",");
+
+            const invalidFields = fields.filter(field => {
+                const cleanField = field.replace("-", "");
+                return !allowedSortFields.includes(cleanField);
+            });
+
+            if (invalidFields.length > 0) {
+                const error = new Error(`Invalid sort field: ${invalidFields.join(", ")}`);
+                error.statusCode = 400;
+                throw error;
+            }
+
+            const sortBy = fields.join(" ");
             this.query = this.query.sort(sortBy);
+
         } else {
-            this.query = this.query.sort('-releaseYear');
+            this.query = this.query.sort("-releaseYear");
         }
+
         return this;
     }
 
 
     limitFields() {
+
         if (this.queryString.fields) {
-            const fields = this.queryString.fields.split(',').join(' ');
+
+            const requestedFields = this.queryString.fields.split(',');
+
+            // get allowed schema fields
+            const allowedFields = Object.keys(this.query.model.schema.paths);
+
+            // check for invalid fields
+            const invalidFields = requestedFields.filter(field => {
+                const cleanField = field.replace('-', '');
+                return !allowedFields.includes(cleanField);
+            });
+
+            if (invalidFields.length > 0) {
+                const error = new Error(`Invalid field selection: ${invalidFields.join(', ')}`);
+                error.statusCode = 400;
+                throw error;
+            }
+
+            const fields = requestedFields.join(' ');
             this.query = this.query.select(fields);
+
         }
+
         return this;
     }
 
