@@ -5,6 +5,9 @@ const routes = require('./routes/index.routes');
 const swagger = require('swagger-ui-express')
 const morgan = require('morgan');
 const swaggerSpec = require('./config/swagger')
+require("./cron/clearCache");
+require("./cron/deleteOldReviews");
+require("./cron/removeExpiredWatchlist");
 
 const app = express();
 
