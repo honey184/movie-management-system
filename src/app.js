@@ -8,6 +8,7 @@ const swaggerSpec = require('./config/swagger')
 require("./cron/clearCache");
 require("./cron/deleteOldReviews");
 require("./cron/removeExpiredWatchlist");
+require("./cron/trendingMovie");
 
 const app = express();
 
