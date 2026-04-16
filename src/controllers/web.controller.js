@@ -7,17 +7,12 @@ const buildPageMeta = (title, currentPath) => ({
 });
 
 exports.renderHome = async (req, res, next) => {
-
-    console.log("web controller called");
-
     try {
         const [latestMoviesData, topRatedMovies, mostReviewedMovies] = await Promise.all([
             movieService.getAllMovies({ limit: 6, sort: '-releaseYear' }),
             movieService.getTopRated(),
             movieService.getMostReviewed(),
         ]);
-
-        console.log("into the render home ");
 
         res.render('pages/home', {
             ...buildPageMeta('MovieHub Home', req.path),

@@ -98,11 +98,11 @@ exports.getMyReviews = async (userId, queryString) => {
     const features = new ApiFeatures(
         Review.find({ userId }).populate('movieId', 'title genre ratingsAvg'),
         queryString
-    ).paginate();
+    ).filter().paginate();
 
     const [reviews, total] = await Promise.all([
         features.query,
-        Review.countDocuments({ userId }),
+        Review.countDocuments({ userId, ...(queryString.movieId ? { movieId: queryString.movieId } : {}) }),
     ]);
 
     return { total, ...features.pagination, reviews };

@@ -27,9 +27,6 @@ const clearMovieCache = async () => {
 };
 
 exports.getAllMovies = async (queryString) => {
-
-    console.log("movies service called");
-
     const cacheKey = `movies:all:${JSON.stringify(queryString)}`;
     const cached = await getCached(cacheKey);
     if (cached) return cached;
@@ -75,15 +72,23 @@ exports.searchMovies = async (queryString) => {
     const features = new ApiFeatures(Movie.find(), queryString)
         .search()
         .filter()
-        .sort()
-        .paginate();
+        .sort();
+
+    const countQuery = new ApiFeatures(Movie.find(), queryString)
+        .search()
+        .filter();
+
+    const totalCount = await countQuery.query.countDocuments();
+
+    features.paginate();
 
     const movies = await features.query;
 
     const result = {
+        ...features.pagination,
         count: movies.length,
-        pagination: features.pagination,
-        movies
+        total: totalCount,
+        movies,
     };
 
     await setCache(cacheKey, result, 30);

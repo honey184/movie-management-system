@@ -43,7 +43,7 @@
             </section>
 
             <aside class="sidebar-panel">
-                <h2>Write a Review</h2>
+                <h2 id="review-form-title">Write a Review</h2>
                 <form id="review-form" class="stack-form">
                     <input type="hidden" name="movieId" value="<%= movie._id %>">
                     <select name="rating" required>
@@ -55,7 +55,10 @@
                         <option value="5">5</option>
                     </select>
                     <textarea name="comment" rows="5" placeholder="Share your thoughts"></textarea>
-                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="review-submit-btn">Submit Review</button>
+                        <button type="button" class="btn btn-ghost hidden" id="delete-review-btn">Delete Review</button>
+                    </div>
                     <p class="form-message" id="review-message"></p>
                 </form>
             </aside>

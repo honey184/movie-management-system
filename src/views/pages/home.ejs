@@ -1,84 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/head') %>
 </head>
+
 <body>
     <%- include('../partials/header') %>
 
-    <main>
-        <section class="hero">
-            <div class="container hero-grid">
-                <div>
-                    <span class="eyebrow">EJS Frontend</span>
-                    <h1>Browse movies, reviews, and your watchlist from a clean server-rendered UI.</h1>
-                    <p>This frontend uses your existing API and models, so you can expand it without rebuilding the backend.</p>
-                    <div class="hero-actions">
-                        <a href="/movies" class="btn btn-primary">Explore Movies</a>
-                        <a href="/watchlist" class="btn btn-ghost">My Watchlist</a>
-                    </div>
-                </div>
-
-                <div class="hero-panel">
+        <main>
+            <section class="hero">
+                <div class="container hero-grid">
                     <div>
-                        <span>Top Rated</span>
-                        <strong><%= topRatedMovies.length %> titles</strong>
-                    </div>
-                    <div>
-                        <span>Most Reviewed</span>
-                        <strong><%= mostReviewedMovies.length %> titles</strong>
-                    </div>
-                    <div>
-                        <span>Latest Loaded</span>
-                        <strong><%= latestMovies.length %> titles</strong>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <h2>Latest Movies</h2>
-                    <a href="/movies">View all</a>
-                </div>
-                <div class="card-grid">
-                    <% latestMovies.forEach((movie) => { %>
-                        <%- include('../partials/movie-card', { movie }) %>
-                    <% }) %>
-                </div>
-            </div>
-        </section>
-
-        <section class="section section-soft">
-            <div class="container analytics-grid">
-                <div class="analytics-card">
-                    <div class="section-heading">
-                        <h2>Top Rated</h2>
-                    </div>
-                    <% topRatedMovies.forEach((movie) => { %>
-                        <div class="rank-row">
-                            <span><%= movie.title %></span>
-                            <strong><%= Number(movie.ratingsAvg || 0).toFixed(1) %></strong>
+                        <span class="eyebrow">EJS Frontend</span>
+                        <h1>Browse movies, reviews, and your watchlist from a clean server-rendered UI.</h1>
+                        <p>This frontend uses your existing API and models, so you can expand it without rebuilding the
+                            backend.</p>
+                        <div class="hero-actions">
+                            <a href="/movies" class="btn btn-primary">Explore Movies</a>
+                            <a href="/watchlist" class="btn btn-ghost">My Watchlist</a>
                         </div>
-                    <% }) %>
-                </div>
-
-                <div class="analytics-card">
-                    <div class="section-heading">
-                        <h2>Most Reviewed</h2>
                     </div>
-                    <% mostReviewedMovies.forEach((movie) => { %>
-                        <div class="rank-row">
-                            <span><%= movie.title %></span>
-                            <strong><%= movie.ratingsCount || 0 %></strong>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-        </section>
-    </main>
 
-    <%- include('../partials/footer') %>
+                    <div class="hero-panel">
+                        <div>
+                            <span>Top Rated</span>
+                            <strong>
+                                <%= topRatedMovies.length %> titles
+                            </strong>
+                        </div>
+                        <div>
+                            <span>Most Reviewed</span>
+                            <strong>
+                                <%= mostReviewedMovies.length %> titles
+                            </strong>
+                        </div>
+                        <div>
+                            <span>Latest Loaded</span>
+                            <strong>
+                                <%= latestMovies.length %> titles
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-heading">
+                        <h2>Latest Movies</h2>
+                        <a href="/movies">View all</a>
+                    </div>
+                    <div class="card-grid">
+                        <% latestMovies.forEach((movie)=> { %>
+                            <%- include('../partials/movie-card', { movie }) %>
+                                <% }) %>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section section-soft">
+                <div class="container analytics-grid">
+                    <div class="analytics-card">
+                        <div class="section-heading">
+                            <h2>Top Rated</h2>
+                        </div>
+                        <% topRatedMovies.forEach((movie)=> { %>
+                            <div class="rank-row">
+                                <span>
+                                    <%= movie.title %>
+                                </span>
+                                <strong>
+                                    <%= Number(movie.ratingsAvg || 0).toFixed(1) %>
+                                </strong>
+                            </div>
+                            <% }) %>
+                    </div>
+
+                    <div class="analytics-card">
+                        <div class="section-heading">
+                            <h2>Most Reviewed</h2>
+                        </div>
+                        <% mostReviewedMovies.forEach((movie)=> { %>
+                            <div class="rank-row">
+                                <span>
+                                    <%= movie.title %>
+                                </span>
+                                <strong>
+                                    <%= movie.ratingsCount || 0 %>
+                                </strong>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <%- include('../partials/footer') %>
 </body>
+
 </html>

@@ -1,4 +1,10 @@
-const movieToken = localStorage.getItem('moviehub_token');
+const movieToken = MovieHubAuth.getToken();
+const reviewForm = document.getElementById('review-form');
+const reviewTitle = document.getElementById('review-form-title');
+const reviewSubmitBtn = document.getElementById('review-submit-btn');
+const deleteReviewBtn = document.getElementById('delete-review-btn');
+const movieId = reviewForm?.querySelector('input[name="movieId"]')?.value;
+let existingReview = null;
 
 const reviewMessage = document.getElementById('review-message');
 
@@ -16,6 +22,50 @@ const requireLogin = () => {
         window.location.href = '/login';
     }, 700);
     return false;
+};
+
+const canManageReviews = () => MovieHubAuth.getRole() === 'user';
+const getReviewId = (review) => review?._id || review?.id || null;
+
+const setReviewMode = (review) => {
+    existingReview = review;
+
+    if (!reviewForm || !reviewTitle || !reviewSubmitBtn || !deleteReviewBtn) return;
+
+    if (!review) {
+        reviewTitle.textContent = 'Write a Review';
+        reviewSubmitBtn.textContent = 'Submit Review';
+        deleteReviewBtn.classList.add('hidden');
+        reviewForm.rating.value = '';
+        reviewForm.comment.value = '';
+        return;
+    }
+
+    reviewTitle.textContent = 'Edit Your Review';
+    reviewSubmitBtn.textContent = 'Update Review';
+    deleteReviewBtn.classList.remove('hidden');
+    reviewForm.rating.value = String(review.rating || '');
+    reviewForm.comment.value = review.comment || '';
+};
+
+const loadMyReview = async () => {
+    if (!movieToken || !canManageReviews() || !movieId) return;
+
+    try {
+        const response = await fetch(`/api/reviews/my?movieId=${movieId}&limit=1`, {
+            headers: {
+                Authorization: `Bearer ${movieToken}`,
+            },
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Unable to load your review');
+
+        const review = result.reviews?.[0] || null;
+        setReviewMode(review);
+    } catch (error) {
+        setReviewMessage(error.message, 'error');
+    }
 };
 
 document.getElementById('add-to-watchlist-btn')?.addEventListener('click', async (event) => {
@@ -43,16 +93,25 @@ document.getElementById('add-to-watchlist-btn')?.addEventListener('click', async
     }
 });
 
-document.getElementById('review-form')?.addEventListener('submit', async (event) => {
+reviewForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     if (!requireLogin()) return;
+    if (!canManageReviews()) {
+        setReviewMessage('Only user accounts can create or update reviews.', 'error');
+        return;
+    }
 
     const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const reviewId = getReviewId(existingReview);
+
+    if (existingReview) {
+        delete payload.movieId;
+    }
 
     try {
-        const response = await fetch('/api/reviews', {
-            method: 'POST',
+        const response = await fetch(existingReview ? `/api/reviews/${reviewId}` : '/api/reviews', {
+            method: existingReview ? 'PATCH' : 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${movieToken}`,
@@ -62,11 +121,46 @@ document.getElementById('review-form')?.addEventListener('submit', async (event)
 
         const result = await response.json();
 
-        if (!response.ok) throw new Error(result.message || 'Unable to submit review');
+        if (!response.ok) throw new Error(result.message || `Unable to ${existingReview ? 'update' : 'submit'} review`);
 
-        setReviewMessage('Review submitted successfully. Refreshing...', 'success');
+        setReviewMessage(`Review ${existingReview ? 'updated' : 'submitted'} successfully. Refreshing...`, 'success');
         window.setTimeout(() => window.location.reload(), 900);
     } catch (error) {
         setReviewMessage(error.message, 'error');
     }
 });
+
+deleteReviewBtn?.addEventListener('click', async () => {
+    if (!requireLogin()) return;
+    if (!canManageReviews()) {
+        setReviewMessage('Only user accounts can delete reviews.', 'error');
+        return;
+    }
+    const reviewId = getReviewId(existingReview);
+    if (!reviewId) {
+        setReviewMessage('Unable to find review id for deletion.', 'error');
+        return;
+    }
+
+    const confirmed = window.confirm('Delete your review for this movie?');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`/api/reviews/${reviewId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${movieToken}`,
+            },
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Unable to delete review');
+
+        setReviewMessage('Review deleted successfully. Refreshing...', 'success');
+        window.setTimeout(() => window.location.reload(), 900);
+    } catch (error) {
+        setReviewMessage(error.message, 'error');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', loadMyReview);
