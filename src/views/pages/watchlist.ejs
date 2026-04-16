@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+        <main class="section">
+            <div class="container">
+                <div class="page-top">
+                    <div>
+                        <span class="eyebrow">Private Area</span>
+                        <h1>My Watchlist</h1>
+                    </div>
+                    <button class="btn btn-ghost" id="clear-watchlist-btn">Clear Watchlist</button>
+                </div>
+
+                <div class="watchlist-layout">
+                    <section>
+                        <div class="section-heading">
+                            <h2>Saved Movies</h2>
+                            <span id="watchlist-count">0 items</span>
+                        </div>
+                        <div id="watchlist-grid" class="card-grid"></div>
+                    </section>
+
+                    <aside class="analytics-card">
+                        <div class="section-heading">
+                            <h2>Recommendations</h2>
+                        </div>
+                        <div id="recommendations-list" class="stack-list"></div>
+                    </aside>
+                </div>
+
+                <div class="empty-state hidden" id="watchlist-empty">
+                    <h3 id="watchlist-title">Your watchlist is empty</h3>
+
+                    <p id="login-message">
+                        Login first, then add movies from the details page.
+                    </p>
+
+                    <p id="empty-message" class="hidden">
+                        You haven't added any movies yet.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+            <script src="/js/watchlist.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="section auth-section">
+        <div class="container auth-shell">
+            <section class="auth-copy">
+                <span class="eyebrow">Create Account</span>
+                <h1>Register a new user account for MovieHub.</h1>
+                <p>After registration, you can log in immediately and start saving movies to your watchlist.</p>
+            </section>
+
+            <section class="auth-card">
+                <form id="register-form" class="stack-form">
+                    <input type="text" name="name" placeholder="Full name" required>
+                    <input type="email" name="email" placeholder="Email address" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <p class="form-message" id="register-message"></p>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="/login">Login</a></p>
+            </section>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

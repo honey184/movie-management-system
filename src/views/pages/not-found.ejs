@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="section">
+        <div class="container empty-state">
+            <span class="eyebrow">404</span>
+            <h1>Page not found</h1>
+            <p>The path <strong><%= currentPath %></strong> does not exist.</p>
+            <a href="/" class="btn btn-primary">Back to home</a>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

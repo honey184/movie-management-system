@@ -41,7 +41,7 @@ class ApiFeatures {
 
         const allowedSortFields = [
             "releaseYear",
-            "ratingAvg",
+            "ratingsAvg",
             "ratingsCount",
         ];
 
@@ -105,7 +105,7 @@ class ApiFeatures {
         const page = parseInt(this.queryString.page, 10) || 1;
         let limit = parseInt(this.queryString.limit, 10) || 20;
 
-        const MAX_LIMIT = 20;
+        const MAX_LIMIT = 50;
         limit = Math.min(limit, MAX_LIMIT);
 
         const skip = (page - 1) * limit;

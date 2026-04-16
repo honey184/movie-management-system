@@ -1,0 +1,18 @@
+<header class="site-header">
+    <div class="container nav-shell">
+        <a href="/" class="brand">MovieHub</a>
+
+        <nav class="site-nav" id="site-nav">
+            <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+            <a href="/movies" class="<%= currentPath.startsWith('/movies') ? 'active' : '' %>">Movies</a>
+            <a href="/watchlist" class="<%= currentPath === '/watchlist' ? 'active' : '' %>">Watchlist</a>
+        </nav>
+
+        <div class="nav-actions" id="nav-auth-actions">
+
+            <a href="/login" class="btn btn-ghost">Login</a>
+            <a href="/register" class="btn btn-primary">Register</a>
+
+        </div>
+    </div>
+</header>

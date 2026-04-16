@@ -1,0 +1,17 @@
+<article class="movie-card">
+    <div class="movie-card__content">
+        <span class="movie-card__year"><%= movie.releaseYear %></span>
+        <h3><%= movie.title %></h3>
+        <p><%= movie.description ? movie.description.slice(0, 120) : 'No description available yet.' %></p>
+        <div class="movie-meta">
+            <span>Rating <strong><%= Number(movie.ratingsAvg || 0).toFixed(1) %></strong></span>
+            <span>Reviews <strong><%= movie.ratingsCount || 0 %></strong></span>
+        </div>
+        <div class="movie-tags">
+            <% (movie.genre || []).slice(0, 3).forEach((tag) => { %>
+                <span><%= tag %></span>
+            <% }) %>
+        </div>
+    </div>
+    <a href="/movies/<%= movie._id %>" class="card-link">View details</a>
+</article>

@@ -28,23 +28,36 @@ const clearMovieCache = async () => {
 
 exports.getAllMovies = async (queryString) => {
 
+    console.log("movies service called");
+
     const cacheKey = `movies:all:${JSON.stringify(queryString)}`;
     const cached = await getCached(cacheKey);
     if (cached) return cached;
 
     const features = new ApiFeatures(Movie.find(), queryString)
+        .search()
         .filter()
         .sort()
-        .limitFields()
-        .paginate();
+        .limitFields();
 
-    const movies = await features.query
+    const countQuery = new ApiFeatures(Movie.find(), queryString)
+        .search()
+        .filter();
 
+    const totalCount = await countQuery.query.countDocuments();
 
-    const result = { ...features.pagination, movies };
+    features.paginate();
+    const movies = await features.query;
+
+    const result = {
+        ...features.pagination,
+        movies,
+        total: totalCount
+    };
+
     await setCache(cacheKey, result);
-    return result;
 
+    return result;
 };
 
 

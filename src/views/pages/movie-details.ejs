@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="section">
+        <div class="container detail-grid">
+            <section class="detail-panel">
+                <span class="eyebrow">Movie Details</span>
+                <h1><%= movie.title %></h1>
+                <p class="lead"><%= movie.description || 'No description available yet.' %></p>
+
+                <div class="detail-meta">
+                    <div><span>Release</span><strong><%= movie.releaseYear %></strong></div>
+                    <div><span>Rating</span><strong><%= Number(movie.ratingsAvg || 0).toFixed(1) %></strong></div>
+                    <div><span>Reviews</span><strong><%= movie.ratingsCount || 0 %></strong></div>
+                </div>
+
+                <div class="movie-tags">
+                    <% (movie.genre || []).forEach((tag) => { %>
+                        <span><%= tag %></span>
+                    <% }) %>
+                </div>
+
+                <% if (movie.cast && movie.cast.length) { %>
+                    <div class="cast-list">
+                        <h3>Cast</h3>
+                        <p><%= movie.cast.join(', ') %></p>
+                    </div>
+                <% } %>
+
+                <div class="detail-actions">
+                    <button
+                        class="btn btn-primary"
+                        id="add-to-watchlist-btn"
+                        data-movie-id="<%= movie._id %>">
+                        Add to Watchlist
+                    </button>
+                </div>
+            </section>
+
+            <aside class="sidebar-panel">
+                <h2>Write a Review</h2>
+                <form id="review-form" class="stack-form">
+                    <input type="hidden" name="movieId" value="<%= movie._id %>">
+                    <select name="rating" required>
+                        <option value="">Select rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <textarea name="comment" rows="5" placeholder="Share your thoughts"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <p class="form-message" id="review-message"></p>
+                </form>
+            </aside>
+        </div>
+
+        <div class="container section-top">
+            <div class="section-heading">
+                <h2>Recent Reviews</h2>
+                <span><%= reviewCount %> total</span>
+            </div>
+
+            <% if (reviews.length) { %>
+                <div class="review-list">
+                    <% reviews.forEach((review) => { %>
+                        <article class="review-card">
+                            <div class="review-top">
+                                <strong><%= review.userId?.name || 'User' %></strong>
+                                <span><%= review.rating %>/5</span>
+                            </div>
+                            <p><%= review.comment || 'No comment provided.' %></p>
+                        </article>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h3>No reviews yet</h3>
+                    <p>Be the first one to review this movie.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+    <script src="/js/movie-details.js"></script>
+</body>
+</html>

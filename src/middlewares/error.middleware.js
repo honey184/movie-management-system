@@ -1,17 +1,17 @@
 const errorHandler = (err, req, res, next) => {
-
     const statusCode = err.statusCode || 500;
+    const message = err.statusCode ? err.message : 'Internal Server Error';
 
-    if (!err.statusCode || err.statusCode == 500) {
-        res.status(statusCode).json({
+    if (req.originalUrl.startsWith('/api')) {
+        return res.status(statusCode).json({
             success: false,
-            message: "Internal Server Error"
-        })
+            message
+        });
     }
 
-    res.status(statusCode).json({
-        success: false,
-        message: err.message || "Internal Server Error"
+    return res.status(statusCode).render('pages/not-found', {
+        pageTitle: 'Something Went Wrong',
+        currentPath: req.path
     });
 };
 
