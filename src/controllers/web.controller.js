@@ -98,11 +98,33 @@ exports.renderWatchlist = (req, res) => {
 
 exports.renderAdminMovies = async (req, res, next) => {
     try {
-        const moviesData = await movieService.getAllMovies({ page: 1, limit: 20, sort: '-releaseYear' });
+        const query = {
+            page: req.query.page || 1,
+            limit: req.query.limit || 10,
+            sort: req.query.sort || '-releaseYear',
+        };
+
+        const moviesData = req.query.q
+            ? await movieService.searchMovies({ ...query, q: req.query.q })
+            : await movieService.getAllMovies(query);
+
+        const pagination = {
+            page: moviesData.page || Number(req.query.page) || 1,
+            limit: moviesData.limit || Number(req.query.limit) || 10,
+            hasPrev: (moviesData.page || 1) > 1,
+            hasNext: (moviesData.page * moviesData.limit) < moviesData.total,
+        };
 
         res.render('pages/admin-movies', {
             ...buildPageMeta('Admin Movie Manager', req.path),
             movies: moviesData.movies || [],
+            data: moviesData,
+            filters: {
+                q: req.query.q || '',
+                sort: req.query.sort || '-releaseYear',
+                limit: pagination.limit,
+            },
+            pagination,
         });
     } catch (error) {
         next(error);

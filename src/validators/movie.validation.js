@@ -1,4 +1,9 @@
 const Joi = require("../utils/joi");
+const allowedGenres = [
+    'Action', 'Comedy', 'Drama', 'Horror',
+    'Sci-Fi', 'Romance', 'Thriller', 'Animation',
+    'Documentary', 'Adventure'
+];
 
 const createMovieSchema = Joi.object({
     title: Joi.string()
@@ -13,11 +18,7 @@ const createMovieSchema = Joi.object({
         .label("Description"),
 
     genre: Joi.array()
-        .items(Joi.string().valid(
-            'Action', 'Comedy', 'Drama', 'Horror',
-            'Sci-Fi', 'Romance', 'Thriller', 'Animation',
-            'Documentary', 'Adventure'
-        ))
+        .items(Joi.string().trim().valid(...allowedGenres).insensitive())
         .min(1)
         .required()
         .label("Genre"),
@@ -47,11 +48,7 @@ const updateMovieSchema = Joi.object({
         .label("Description"),
 
     genre: Joi.array()
-        .items(Joi.string().valid(
-            'Action', 'Comedy', 'Drama', 'Horror',
-            'Sci-Fi', 'Romance', 'Thriller', 'Animation',
-            'Documentary', 'Adventure'
-        ))
+        .items(Joi.string().trim().valid(...allowedGenres).insensitive())
         .min(1)
         .optional()
         .label("Genre"),

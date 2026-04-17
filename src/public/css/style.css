@@ -365,6 +365,13 @@ h3 {
     gap: 0.9rem;
 }
 
+.admin-filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 0.9rem;
+    margin: 1.25rem 0 0.75rem;
+}
+
 .form-actions {
     display: flex;
     gap: 0.9rem;
@@ -566,6 +573,7 @@ textarea:focus {
     .auth-shell,
     .watchlist-layout,
     .admin-shell,
+    .admin-filter-form,
     .card-grid,
     .analytics-grid,
     .filters {
