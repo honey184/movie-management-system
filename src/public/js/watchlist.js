@@ -20,17 +20,19 @@ const authHeaders = () => ({
 });
 
 const renderWatchlist = (movies) => {
-    if (!watchlistGrid || !watchlistCount || !watchlistEmpty) return;
+    if (!watchlistGrid || !watchlistCount || !watchlistEmpty || !clearWatchlistBtn) return;
 
     watchlistCount.textContent = `${movies.length} item${movies.length === 1 ? '' : 's'}`;
 
     if (!movies.length) {
         watchlistGrid.innerHTML = '';
         watchlistEmpty.classList.remove('hidden');
+        clearWatchlistBtn.style.display = 'none';
         return;
     }
 
     watchlistEmpty.classList.add('hidden');
+    clearWatchlistBtn.style.display = 'block';
 
     watchlistGrid.innerHTML = movies.map((movie) => `
         <article class="movie-card">
