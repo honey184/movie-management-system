@@ -12,13 +12,12 @@
             <section class="hero">
                 <div class="container hero-grid">
                     <div>
-                        <span class="eyebrow">EJS Frontend</span>
+                        <span class="eyebrow">Discover • Review • Watch</span>
                         <h1>Curate Your Cinematic World.</h1>
-                        <p>This frontend uses your existing API and models, so you can expand it without rebuilding the
-                            backend.</p>
-                        <div class="hero-actions">
-                            <a href="/movies" class="btn btn-primary">Explore Movies</a>
-                            <a href="/watchlist" class="btn btn-ghost">My Watchlist</a>
+                        <p>Discover new films, track your favorites, and create the ultimate watchlist experience.</p>
+                        <div class="hero-actions" id="home-hero-actions">
+                            <a id="home-movies-link" href="/movies" class="btn btn-primary">Explore Movies</a>
+                            <a id="home-watchlist-link" href="/watchlist" class="btn btn-ghost">My Watchlist</a>
                         </div>
                     </div>
 
@@ -49,7 +48,7 @@
                 <div class="container">
                     <div class="section-heading">
                         <h2>Latest Movies</h2>
-                        <a href="/movies">View all</a>
+                        <a id="home-view-all-link" href="/movies">View all</a>
                     </div>
                     <div class="card-grid">
                         <% latestMovies.forEach((movie)=> { %>

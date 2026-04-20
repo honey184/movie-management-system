@@ -41,7 +41,10 @@ const submitAuthForm = async ({ formId, endpoint, messageId, redirectTo, isLogin
             );
 
             window.setTimeout(() => {
-                window.location.href = redirectTo;
+                const redirectPath = isLogin && result.result?.token && MovieHubAuth.isAdmin()
+                    ? '/admin/movies'
+                    : redirectTo;
+                window.location.href = redirectPath;
             }, 900);
         } catch (error) {
             setMessage(messageId, error.message, 'error');

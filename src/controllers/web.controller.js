@@ -104,6 +104,8 @@ exports.renderAdminMovies = async (req, res, next) => {
             sort: req.query.sort || '-releaseYear',
         };
 
+        if (req.query.releaseYear) query.releaseYear = req.query.releaseYear;
+
         const moviesData = req.query.q
             ? await movieService.searchMovies({ ...query, q: req.query.q })
             : await movieService.getAllMovies(query);
@@ -121,6 +123,7 @@ exports.renderAdminMovies = async (req, res, next) => {
             data: moviesData,
             filters: {
                 q: req.query.q || '',
+                releaseYear: req.query.releaseYear || '',
                 sort: req.query.sort || '-releaseYear',
                 limit: pagination.limit,
             },

@@ -43,6 +43,12 @@
                         placeholder="Search movies by keyword"
                         value="<%= filters.q %>">
 
+                    <input
+                        type="number"
+                        name="releaseYear"
+                        placeholder="Release year"
+                        value="<%= filters.releaseYear %>">
+
                     <select name="sort">
                         <option value="-releaseYear" <%= filters.sort === '-releaseYear' ? 'selected' : '' %>>Newest first</option>
                         <option value="releaseYear" <%= filters.sort === 'releaseYear' ? 'selected' : '' %>>Oldest first</option>
@@ -75,7 +81,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <h3>No movies found</h3>
-                            <p>Try another keyword or page size.</p>
+                            <p>Try another keyword, release year, or page size.</p>
                         </div>
                     <% } %>
                 </div>

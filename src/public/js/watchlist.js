@@ -82,7 +82,7 @@ const renderRecommendations = (movies, source) => {
         ${movies.map((movie) => `
             <article>
                 <strong>${movie.title}</strong>
-                <p>${movie.releaseYear} • Rating ${Number(movie.ratingsAvg || 0).toFixed(1)}</p>
+                <p>${movie.releaseYear} • ${(movie.genre || []).join(', ') || 'No genre'} • Rating ${Number(movie.ratingsAvg || 0).toFixed(1)}</p>
             </article>
         `).join('')}
     `;
