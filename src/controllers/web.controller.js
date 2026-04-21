@@ -8,11 +8,15 @@ const buildPageMeta = (title, currentPath) => ({
 
 exports.renderHome = async (req, res, next) => {
     try {
-        const latestMoviesData = await movieService.getAllMovies({ limit: 9, sort: '-releaseYear' });
+        const [latestMoviesData, genres] = await Promise.all([
+            movieService.getAllMovies({ limit: 9, sort: '-releaseYear' }),
+            movieService.getGenres(),
+        ]);
 
         res.render('pages/home', {
             ...buildPageMeta('MovieHub Home', req.path),
             latestMovies: latestMoviesData.movies || [],
+            genres: genres || [],
         });
     } catch (error) {
         next(error);

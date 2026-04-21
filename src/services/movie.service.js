@@ -212,3 +212,16 @@ exports.getMostReviewed = async () => {
     await setCache(cacheKey, result, 300);
     return result;
 };
+
+exports.getGenres = async () => {
+
+    const cacheKey = 'movies:genres';
+    const cached = await getCached(cacheKey);
+    if (cached) return cached;
+
+    const genres = await Movie.distinct('genre');
+    const result = genres.sort((first, second) => first.localeCompare(second));
+
+    await setCache(cacheKey, result, 300);
+    return result;
+};

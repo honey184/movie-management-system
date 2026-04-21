@@ -18,9 +18,55 @@ const createRankRow = (movie, metric) => {
     return row;
 };
 
+const capitalizeWords = (value = '') => value.replace(/\b\w/g, (char) => char.toUpperCase());
+
 const createAuthHeaders = () => {
     const token = MovieHubAuth.getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const createMovieCard = (movie) => {
+    const article = document.createElement('article');
+    article.className = 'movie-card';
+
+    const content = document.createElement('div');
+    content.className = 'movie-card__content';
+
+    const year = document.createElement('span');
+    year.className = 'movie-card__year';
+    year.textContent = movie.releaseYear || '';
+
+    const title = document.createElement('h3');
+    title.textContent = movie.title || 'Untitled';
+
+    const description = document.createElement('p');
+    description.textContent = movie.description
+        ? movie.description.slice(0, 120)
+        : 'No description available yet.';
+
+    const meta = document.createElement('div');
+    meta.className = 'movie-meta';
+    meta.innerHTML = `
+        <span>Rating <strong>${Number(movie.ratingsAvg || 0).toFixed(1)}</strong></span>
+        <span>Reviews <strong>${movie.ratingsCount || 0}</strong></span>
+    `;
+
+    const tags = document.createElement('div');
+    tags.className = 'movie-tags';
+    (movie.genre || []).slice(0, 3).forEach((tag) => {
+        const item = document.createElement('span');
+        item.textContent = tag;
+        tags.appendChild(item);
+    });
+
+    const link = document.createElement('a');
+    link.className = 'card-link';
+    link.href = `/movies/${movie._id}`;
+    link.textContent = 'View details';
+
+    content.append(year, title, description, meta, tags);
+    article.append(content, link);
+    return article;
 };
 
 const renderAnalyticsList = (listId, statusId, movies, metric) => {
@@ -108,6 +154,75 @@ const loadHeaderUserInfo = async () => {
             return;
         }
     }
+};
+
+const loadHomeGenreMovies = async (genre = '') => {
+    const movieGrid = document.getElementById('home-movie-grid');
+    const genreStatus = document.getElementById('home-genre-status');
+    const heading = document.getElementById('home-movies-heading');
+    if (!movieGrid || !genreStatus || !heading) return;
+
+    const limit = movieGrid.dataset.defaultLimit || '9';
+    const params = new URLSearchParams({
+        limit,
+        sort: '-releaseYear',
+    });
+
+    if (genre) {
+        params.set('genre', genre);
+    }
+
+    genreStatus.textContent = 'Loading movies...';
+    genreStatus.classList.remove('hidden');
+
+    try {
+        const response = await fetch(`/api/movies?${params.toString()}`);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to load movies');
+        }
+
+        const movies = result.data?.movies || [];
+        movieGrid.innerHTML = '';
+
+        heading.textContent = genre ? `${capitalizeWords(genre)} Movies` : 'Latest Movies';
+
+        if (!movies.length) {
+            movieGrid.innerHTML = `
+                <div class="empty-state">
+                    <h3>No movies found</h3>
+                    <p>There are no movies available for this genre right now.</p>
+                </div>
+            `;
+            genreStatus.classList.add('hidden');
+            return;
+        }
+
+        movies.forEach((movie) => {
+            movieGrid.appendChild(createMovieCard(movie));
+        });
+        genreStatus.classList.add('hidden');
+    } catch (error) {
+        genreStatus.textContent = 'Could not load movies for this genre.';
+    }
+};
+
+const setupHomeGenreFilter = () => {
+    const genreFilter = document.getElementById('home-genre-filter');
+    if (!genreFilter) return;
+
+    genreFilter.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-genre]');
+        if (!button) return;
+
+        genreFilter.querySelectorAll('.genre-filter__btn').forEach((item) => {
+            item.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        loadHomeGenreMovies(button.dataset.genre || '');
+    });
 };
 
 const enforceAdminPageAccess = (isAdmin) => {
@@ -211,4 +326,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavAuthState();
     loadAnalyticsDashboard();
     loadHeaderUserInfo();
+    setupHomeGenreFilter();
 });

@@ -39,10 +39,19 @@
             <section class="section">
                 <div class="container">
                     <div class="section-heading">
-                        <h2>Latest Movies</h2>
+                        <h2 id="home-movies-heading">Latest Movies</h2>
                         <a id="home-view-all-link" href="/movies">View all</a>
                     </div>
-                    <div class="card-grid">
+                    <div class="genre-filter" id="home-genre-filter">
+                        <button type="button" class="genre-filter__btn active" data-genre="">All</button>
+                        <% genres.forEach((genre) => { %>
+                            <button type="button" class="genre-filter__btn" data-genre="<%= genre %>">
+                                <%= genre %>
+                            </button>
+                        <% }) %>
+                    </div>
+                    <p class="analytics-status hidden" id="home-genre-status"></p>
+                    <div class="card-grid" id="home-movie-grid" data-default-limit="9">
                         <% latestMovies.forEach((movie)=> { %>
                             <%- include('../partials/movie-card', { movie }) %>
                                 <% }) %>
