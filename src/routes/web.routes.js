@@ -4,6 +4,8 @@ const webController = require('../controllers/web.controller');
 const router = express.Router();
 
 router.get('/', webController.renderHome);
+router.get('/analytics', webController.renderAnalytics);
+router.get('/analytics/data', webController.getAnalyticsData);
 
 
 router.get('/movies', webController.renderMovies);

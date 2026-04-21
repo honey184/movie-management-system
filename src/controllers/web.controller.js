@@ -8,17 +8,34 @@ const buildPageMeta = (title, currentPath) => ({
 
 exports.renderHome = async (req, res, next) => {
     try {
-        const [latestMoviesData, topRatedMovies, mostReviewedMovies] = await Promise.all([
-            movieService.getAllMovies({ limit: 6, sort: '-releaseYear' }),
-            movieService.getTopRated(),
-            movieService.getMostReviewed(),
-        ]);
+        const latestMoviesData = await movieService.getAllMovies({ limit: 9, sort: '-releaseYear' });
 
         res.render('pages/home', {
             ...buildPageMeta('MovieHub Home', req.path),
             latestMovies: latestMoviesData.movies || [],
-            topRatedMovies,
-            mostReviewedMovies,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.renderAnalytics = (req, res) => {
+    res.render('pages/analytics', buildPageMeta('Movie Analytics', req.path));
+};
+
+exports.getAnalyticsData = async (req, res, next) => {
+    try {
+        const [topRated, mostReviewed] = await Promise.all([
+            movieService.getTopRated(),
+            movieService.getMostReviewed(),
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                topRated,
+                mostReviewed,
+            }
         });
     } catch (error) {
         next(error);

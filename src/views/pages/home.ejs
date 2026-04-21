@@ -23,22 +23,18 @@
 
                     <div class="hero-panel">
                         <div>
-                            <span>Top Rated</span>
-                            <strong>
-                                <%= topRatedMovies.length %> titles
-                            </strong>
-                        </div>
-                        <div>
-                            <span>Most Reviewed</span>
-                            <strong>
-                                <%= mostReviewedMovies.length %> titles
-                            </strong>
-                        </div>
-                        <div>
                             <span>Latest Loaded</span>
                             <strong>
                                 <%= latestMovies.length %> titles
                             </strong>
+                        </div>
+                        <div>
+                            <span>Browse Faster</span>
+                            <strong>9 latest movies</strong>
+                        </div>
+                        <div>
+                            <span>Analytics</span>
+                            <strong>Open the analytics page</strong>
                         </div>
                     </div>
                 </div>
@@ -58,41 +54,6 @@
                 </div>
             </section>
 
-            <section class="section section-soft">
-                <div class="container analytics-grid">
-                    <div class="analytics-card">
-                        <div class="section-heading">
-                            <h2>Top Rated</h2>
-                        </div>
-                        <% topRatedMovies.forEach((movie)=> { %>
-                            <div class="rank-row">
-                                <span>
-                                    <%= movie.title %>
-                                </span>
-                                <strong>
-                                    <%= Number(movie.ratingsAvg || 0).toFixed(1) %>
-                                </strong>
-                            </div>
-                            <% }) %>
-                    </div>
-
-                    <div class="analytics-card">
-                        <div class="section-heading">
-                            <h2>Most Reviewed</h2>
-                        </div>
-                        <% mostReviewedMovies.forEach((movie)=> { %>
-                            <div class="rank-row">
-                                <span>
-                                    <%= movie.title %>
-                                </span>
-                                <strong>
-                                    <%= movie.ratingsCount || 0 %>
-                                </strong>
-                            </div>
-                            <% }) %>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <%- include('../partials/footer') %>

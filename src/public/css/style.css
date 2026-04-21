@@ -359,6 +359,11 @@ h3 {
     border-bottom: 0;
 }
 
+.analytics-status {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.76);
+}
+
 .filters,
 .stack-form {
     display: grid;

@@ -4,8 +4,12 @@
 
         <nav class="site-nav" id="site-nav">
             <a id="home-nav-link" href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
-            <a id="movies-nav-link" href="/movies" class="<%= currentPath.startsWith('/movies') ? 'active' : '' %>">Movies</a>
-            <a id="watchlist-nav-link" href="/watchlist" class="<%= currentPath === '/watchlist' ? 'active' : '' %>">Watchlist</a>
+            <a id="analytics-nav-link" href="/analytics"
+                class="<%= currentPath.startsWith('/analytics') ? 'active' : '' %>">Analytics</a>
+            <a id="movies-nav-link" href="/movies"
+                class="<%= currentPath.startsWith('/movies') ? 'active' : '' %>">Movies</a>
+            <a id="watchlist-nav-link" href="/watchlist"
+                class="<%= currentPath === '/watchlist' ? 'active' : '' %>">Watchlist</a>
         </nav>
 
         <div class="nav-actions" id="nav-auth-actions">

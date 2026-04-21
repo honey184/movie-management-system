@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+        <main>
+            <section class="section">
+                <div class="container page-top">
+                    <div>
+                        <span class="eyebrow">Insights • Rankings • Activity</span>
+                        <h1>Movie Analytics</h1>
+                        <p class="lead">Open the analytics module to see top rated movies and the most reviewed titles.
+                        </p>
+                    </div>
+                    <a href="/movies" class="btn btn-ghost">Browse Movies</a>
+                </div>
+            </section>
+
+            <section class="section section-soft">
+                <div class="container analytics-grid" id="analytics-dashboard" data-analytics-url="/analytics/data">
+                    <div class="analytics-card">
+                        <div class="section-heading">
+                            <h2>Top Rated Movies</h2>
+                            <strong id="top-rated-count">Loading...</strong>
+                        </div>
+                        <p class="analytics-status" id="top-rated-status">Loading analytics...</p>
+                        <div id="top-rated-list"></div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <div class="section-heading">
+                            <h2>Most Reviewed Movies</h2>
+                            <strong id="most-reviewed-count">Loading...</strong>
+                        </div>
+                        <p class="analytics-status" id="most-reviewed-status">Loading analytics...</p>
+                        <div id="most-reviewed-list"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <%- include('../partials/footer') %>
+</body>
+
+</html>

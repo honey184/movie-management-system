@@ -2,6 +2,77 @@ const removeNode = (selector) => {
     document.querySelector(selector)?.remove();
 };
 
+const createRankRow = (movie, metric) => {
+    const row = document.createElement('div');
+    row.className = 'rank-row';
+
+    const title = document.createElement('span');
+    title.textContent = movie.title;
+
+    const value = document.createElement('strong');
+    value.textContent = metric === 'ratingsAvg'
+        ? Number(movie.ratingsAvg || 0).toFixed(1)
+        : movie.ratingsCount || 0;
+
+    row.append(title, value);
+    return row;
+};
+
+const renderAnalyticsList = (listId, statusId, movies, metric) => {
+    const list = document.getElementById(listId);
+    const status = document.getElementById(statusId);
+
+    if (!list || !status) return;
+
+    list.innerHTML = '';
+
+    if (!movies.length) {
+        status.textContent = 'No analytics available right now.';
+        return;
+    }
+
+    status.remove();
+    movies.forEach((movie) => {
+        list.appendChild(createRankRow(movie, metric));
+    });
+};
+
+const loadAnalyticsDashboard = async () => {
+    const analyticsRoot = document.getElementById('analytics-dashboard');
+    if (!analyticsRoot) return;
+
+    const analyticsUrl = analyticsRoot.dataset.analyticsUrl;
+    const topRatedCount = document.getElementById('top-rated-count');
+    const mostReviewedCount = document.getElementById('most-reviewed-count');
+
+    try {
+        const response = await fetch(analyticsUrl);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to load analytics');
+        }
+
+        const topRated = result.data?.topRated || [];
+        const mostReviewed = result.data?.mostReviewed || [];
+
+        if (topRatedCount) topRatedCount.textContent = `${topRated.length} titles`;
+        if (mostReviewedCount) mostReviewedCount.textContent = `${mostReviewed.length} titles`;
+
+        renderAnalyticsList('top-rated-list', 'top-rated-status', topRated, 'ratingsAvg');
+        renderAnalyticsList('most-reviewed-list', 'most-reviewed-status', mostReviewed, 'ratingsCount');
+    } catch (error) {
+        if (topRatedCount) topRatedCount.textContent = 'Unavailable';
+        if (mostReviewedCount) mostReviewedCount.textContent = 'Unavailable';
+
+        const topRatedStatus = document.getElementById('top-rated-status');
+        const mostReviewedStatus = document.getElementById('most-reviewed-status');
+
+        if (topRatedStatus) topRatedStatus.textContent = 'Could not load analytics.';
+        if (mostReviewedStatus) mostReviewedStatus.textContent = 'Could not load analytics.';
+    }
+};
+
 const enforceAdminPageAccess = (isAdmin) => {
     if (!isAdmin) return;
 
@@ -9,6 +80,7 @@ const enforceAdminPageAccess = (isAdmin) => {
 
     if (
         currentPath === '/'
+        || currentPath === '/analytics'
         || currentPath === '/movies'
         || currentPath.startsWith('/movies/')
         || currentPath === '/watchlist'
@@ -41,6 +113,7 @@ const updateNavAuthState = () => {
 
     if (isAdmin) {
         removeNode('#home-nav-link');
+        removeNode('#analytics-nav-link');
         removeNode('#movies-nav-link');
         removeNode('#watchlist-nav-link');
     }
@@ -89,4 +162,7 @@ const updateNavAuthState = () => {
     });
 };
 
-document.addEventListener('DOMContentLoaded', updateNavAuthState);
+document.addEventListener('DOMContentLoaded', () => {
+    updateNavAuthState();
+    loadAnalyticsDashboard();
+});

@@ -1,34 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/head') %>
 </head>
+
 <body>
     <%- include('../partials/header') %>
 
-    <main class="section">
-        <div class="container detail-grid">
-            <section class="detail-panel">
-                <span class="eyebrow">Movie Details</span>
-                <h1><%= movie.title %></h1>
-                <p class="lead"><%= movie.description || 'No description available yet.' %></p>
+        <main class="section">
+            <div class="container detail-grid">
+                <section class="detail-panel">
+                    <span class="eyebrow">Movie Details</span>
+                    <h1>
+                        <%= movie.title %>
+                    </h1>
+                    <p class="lead">
+                        <%= movie.description || 'No description available yet.' %>
+                    </p>
 
-                <div class="detail-meta">
-                    <div><span>Release</span><strong><%= movie.releaseYear %></strong></div>
-                    <div><span>Rating</span><strong><%= Number(movie.ratingsAvg || 0).toFixed(1) %></strong></div>
-                    <div><span>Reviews</span><strong><%= movie.ratingsCount || 0 %></strong></div>
-                </div>
+                    <div class="detail-meta">
+                        <div><span>Release</span><strong>
+                                <%= movie.releaseYear %>
+                            </strong></div>
+                        <div><span>Rating</span><strong>
+                                <%= Number(movie.ratingsAvg || 0).toFixed(1) %>
+                            </strong></div>
+                        <div><span>Reviews</span><strong>
+                                <%= movie.ratingsCount || 0 %>
+                            </strong></div>
+                    </div>
 
-                <div class="movie-tags">
-                    <% (movie.genre || []).forEach((tag) => { %>
-                        <span><%= tag %></span>
-                    <% }) %>
-                </div>
+                    <div class="movie-tags">
+                        <% (movie.genre || []).forEach((tag)=> { %>
+                            <span>
+                                <%= tag %>
+                            </span>
+                            <% }) %>
+                    </div>
 
-                <% if (movie.cast && movie.cast.length) { %>
-                    <div class="cast-list">
-                        <h3>Cast</h3>
-                        <p><%= movie.cast.join(', ') %></p>
+                    <% if (movie.cast && movie.cast.length) { %>
+                        <div class="cast-list">
+                            <h3>Cast</h3>
+                            <p>
+                                <%= movie.cast.join(', ') %></p>
                     </div>
                 <% } %>
 
@@ -75,23 +90,28 @@
                     <% reviews.forEach((review) => { %>
                         <article class="review-card">
                             <div class="review-top">
-                                <strong><%= review.userId?.name || 'User' %></strong>
-                                <span><%= review.rating %>/5</span>
-                            </div>
-                            <p><%= review.comment || 'No comment provided.' %></p>
+                                <strong><%= review.userId?.name || ' User' %></strong>
+                                    <span>
+                                        <%= review.rating %>/5
+                                    </span>
+                        </div>
+                        <p>
+                            <%= review.comment || 'No comment provided.' %>
+                        </p>
                         </article>
-                    <% }) %>
-                </div>
+                        <% }) %>
+            </div>
             <% } else { %>
                 <div class="empty-state">
                     <h3>No reviews yet</h3>
                     <p>Be the first one to review this movie.</p>
                 </div>
-            <% } %>
-        </div>
-    </main>
+                <% } %>
+                    </div>
+        </main>
 
-    <%- include('../partials/footer') %>
-    <script src="/js/movie-details.js"></script>
+        <%- include('../partials/footer') %>
+            <script src="/js/movie-details.js"></script>
 </body>
+
 </html>

@@ -1,76 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/head') %>
 </head>
+
 <body>
     <%- include('../partials/header') %>
 
-    <main class="section">
-        <div class="container admin-shell">
-            <section class="detail-panel">
-                <div class="section-heading">
-                    <div>
-                        <span class="eyebrow">Admin Panel</span>
-                        <h1>Manage Movies</h1>
+        <main class="section">
+            <div class="container admin-shell">
+                <section class="detail-panel">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">Admin Panel</span>
+                            <h1>Manage Movies</h1>
+                        </div>
+                        <span class="admin-badge">Admin only</span>
                     </div>
-                    <span class="admin-badge">Admin only</span>
-                </div>
 
-                <p class="lead">Use this page to add new movies to the system.</p>
+                    <p class="lead">Use this page to add new movies to the system.</p>
 
-                <form id="create-movie-form" class="stack-form section-top">
-                    <input type="text" name="title" placeholder="Movie title" required>
-                    <textarea name="description" rows="4" placeholder="Movie description"></textarea>
-                    <input type="text" name="genre" placeholder="Genres separated by comma. Example: Action, Thriller" required>
-                    <input type="number" name="releaseYear" placeholder="Release year" required>
-                    <input type="text" name="cast" placeholder="Cast separated by comma">
-                    <button type="submit" class="btn btn-primary">Add Movie</button>
-                    <p class="form-message" id="admin-create-message"></p>
-                </form>
-            </section>
+                    <form id="create-movie-form" class="stack-form section-top">
+                        <input type="text" name="title" placeholder="Movie title" required>
+                        <textarea name="description" rows="4" placeholder="Movie description"></textarea>
+                        <input type="text" name="genre"
+                            placeholder="Genres separated by comma. Example: Action, Thriller" required>
+                        <input type="number" name="releaseYear" placeholder="Release year" required>
+                        <input type="text" name="cast" placeholder="Cast separated by comma">
+                        <button type="submit" class="btn btn-primary">Add Movie</button>
+                        <p class="form-message" id="admin-create-message"></p>
+                    </form>
+                </section>
 
-            <section class="sidebar-panel">
-                <div class="section-heading">
-                    <h2>Current Movies</h2>
-                    <span id="admin-movie-count"><%= data.total || movies.length %> items</span>
-                </div>
+                <section class="sidebar-panel">
+                    <div class="section-heading">
+                        <h2>Current Movies</h2>
+                        <span id="admin-movie-count">
+                            <%= data.total || movies.length %> items
+                        </span>
+                    </div>
 
-                <form action="/admin/movies" method="GET" class="admin-filter-form">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search movies by keyword"
-                        value="<%= filters.q %>">
+                    <form action="/admin/movies" method="GET" class="admin-filter-form">
+                        <input type="text" name="q" placeholder="Search movies by keyword" value="<%= filters.q %>">
 
-                    <input
-                        type="number"
-                        name="releaseYear"
-                        placeholder="Release year"
-                        value="<%= filters.releaseYear %>">
+                        <input type="number" name="releaseYear" placeholder="Release year"
+                            value="<%= filters.releaseYear %>">
 
-                    <select name="sort">
-                        <option value="-releaseYear" <%= filters.sort === '-releaseYear' ? 'selected' : '' %>>Newest first</option>
-                        <option value="releaseYear" <%= filters.sort === 'releaseYear' ? 'selected' : '' %>>Oldest first</option>
-                        <option value="-ratingsCount" <%= filters.sort === '-ratingsCount' ? 'selected' : '' %>>Most reviewed</option>
-                    </select>
+                        <select name="sort">
+                            <option value="-releaseYear" <%=filters.sort==='-releaseYear' ? 'selected' : '' %>>Newest
+                                first</option>
+                            <option value="releaseYear" <%=filters.sort==='releaseYear' ? 'selected' : '' %>>Oldest
+                                first</option>
+                            <option value="-ratingsCount" <%=filters.sort==='-ratingsCount' ? 'selected' : '' %>>Most
+                                reviewed</option>
+                        </select>
 
-                    <select name="limit">
-                        <option value="10" <%= pagination.limit === 10 ? 'selected' : '' %>>10 per page</option>
-                        <option value="20" <%= pagination.limit === 20 ? 'selected' : '' %>>20 per page</option>
-                        <option value="50" <%= pagination.limit === 50 ? 'selected' : '' %>>50 per page</option>
-                    </select>
+                        <select name="limit">
+                            <option value="10" <%=pagination.limit===10 ? 'selected' : '' %>>10 per page</option>
+                            <option value="20" <%=pagination.limit===20 ? 'selected' : '' %>>20 per page</option>
+                            <option value="50" <%=pagination.limit===50 ? 'selected' : '' %>>50 per page</option>
+                        </select>
 
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
 
-                <div id="admin-movie-list" class="admin-list">
-                    <% if (movies.length) { %>
-                        <% movies.forEach((movie) => { %>
-                            <article class="admin-item" data-movie-id="<%= movie._id %>">
-                                <div>
-                                    <h3><%= movie.title %></h3>
-                                    <p><%= movie.releaseYear %> • <%= (movie.genre || []).join(', ') %></p>
+                    <div id="admin-movie-list" class="admin-list">
+                        <% if (movies.length) { %>
+                            <% movies.forEach((movie)=> { %>
+                                <article class="admin-item" data-movie-id="<%= movie._id %>">
+                                    <div>
+                                        <h3>
+                                            <%= movie.title %>
+                                        </h3>
+                                        <p>
+                                            <%= movie.releaseYear %> • <%= (movie.genre || []).join(', ') %></p>
                                 </div>
                                 <div class="admin-actions">
                                     <a href="/admin/movies/<%= movie._id %>/edit" class="btn btn-ghost">Edit</a>
@@ -111,7 +115,8 @@
         </div>
     </main>
 
-    <%- include('../partials/footer') %>
-    <script src="/js/admin.js"></script>
+    <%- include(' ../partials/footer') %>
+                                                    <script src="/js/admin.js"></script>
 </body>
+
 </html>
