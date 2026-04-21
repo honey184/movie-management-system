@@ -18,6 +18,11 @@ const createRankRow = (movie, metric) => {
     return row;
 };
 
+const createAuthHeaders = () => {
+    const token = MovieHubAuth.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 const renderAnalyticsList = (listId, statusId, movies, metric) => {
     const list = document.getElementById(listId);
     const status = document.getElementById(statusId);
@@ -70,6 +75,38 @@ const loadAnalyticsDashboard = async () => {
 
         if (topRatedStatus) topRatedStatus.textContent = 'Could not load analytics.';
         if (mostReviewedStatus) mostReviewedStatus.textContent = 'Could not load analytics.';
+    }
+};
+
+const loadHeaderUserInfo = async () => {
+    const token = MovieHubAuth.getToken();
+    const headerUserInfo = document.getElementById('header-user-info');
+    const headerUserName = document.getElementById('header-user-name');
+    const headerUserEmail = document.getElementById('header-user-email');
+    if (!token || !headerUserInfo || !headerUserName || !headerUserEmail) return;
+
+    let responseStatus = null;
+
+    try {
+        const response = await fetch('/profile/data', {
+            headers: createAuthHeaders(),
+        });
+        responseStatus = response.status;
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to load profile');
+        }
+
+        headerUserName.textContent = result.data?.name || 'User';
+        headerUserEmail.textContent = result.data?.email || '';
+        headerUserInfo.classList.remove('hidden');
+    } catch (error) {
+        if (responseStatus === 401) {
+            MovieHubAuth.clear();
+            window.location.replace('/login');
+            return;
+        }
     }
 };
 
@@ -139,6 +176,10 @@ const updateNavAuthState = () => {
 
     if (isAdmin) {
         navActions.innerHTML = `
+            <div class="header-user hidden" id="header-user-info">
+                <strong id="header-user-name"></strong>
+                <span id="header-user-email"></span>
+            </div>
             <button class="btn btn-primary" id="logout-btn" type="button">Logout</button>
         `;
 
@@ -151,6 +192,10 @@ const updateNavAuthState = () => {
     }
 
     navActions.innerHTML = `
+        <div class="header-user hidden" id="header-user-info">
+            <strong id="header-user-name"></strong>
+            <span id="header-user-email"></span>
+        </div>
         <a href="/watchlist" class="btn btn-ghost">Watchlist</a>
         <button class="btn btn-primary" id="logout-btn" type="button">Logout</button>
     `;
@@ -165,4 +210,5 @@ const updateNavAuthState = () => {
 document.addEventListener('DOMContentLoaded', () => {
     updateNavAuthState();
     loadAnalyticsDashboard();
+    loadHeaderUserInfo();
 });

@@ -1,11 +1,13 @@
 const express = require('express');
 const webController = require('../controllers/web.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
 router.get('/', webController.renderHome);
 router.get('/analytics', webController.renderAnalytics);
 router.get('/analytics/data', webController.getAnalyticsData);
+router.get('/profile/data', authMiddleware, webController.getProfileData);
 
 
 router.get('/movies', webController.renderMovies);

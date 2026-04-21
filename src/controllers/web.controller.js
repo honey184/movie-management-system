@@ -42,6 +42,17 @@ exports.getAnalyticsData = async (req, res, next) => {
     }
 };
 
+exports.getProfileData = (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: {
+            name: req.user.name,
+            email: req.user.email,
+            role: req.user.role,
+        }
+    });
+};
+
 exports.renderMovies = async (req, res, next) => {
     try {
         const query = {
