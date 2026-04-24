@@ -328,3 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHeaderUserInfo();
     setupHomeGenreFilter();
 });
+
+// Re-check authentication when page becomes visible (handles back button navigation)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        updateNavAuthState();
+    }
+});

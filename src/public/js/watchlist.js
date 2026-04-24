@@ -140,3 +140,10 @@ clearWatchlistBtn?.addEventListener('click', async () => {
 });
 
 document.addEventListener('DOMContentLoaded', loadWatchlist);
+
+// Re-check authentication when page becomes visible (handles back button navigation)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        loadWatchlist();
+    }
+});

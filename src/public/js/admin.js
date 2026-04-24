@@ -128,3 +128,15 @@ document.addEventListener('DOMContentLoaded', () => {
     bindEditMovie();
     updateAdminCount();
 });
+
+// Re-check authentication when page becomes visible (handles back button navigation)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && window.location.pathname.startsWith('/admin')) {
+        if (!adminGuard()) return;
+        // Re-initialize admin functionality if still authenticated
+        bindCreateMovie();
+        bindDeleteMovie();
+        bindEditMovie();
+        updateAdminCount();
+    }
+});

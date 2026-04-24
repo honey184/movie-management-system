@@ -21,6 +21,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Prevent caching of HTML pages to handle logout/back button issue
+app.use((req, res, next) => {
+    if (req.accepts('html')) {
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    }
+    next();
+});
+
 app.use('/', webRoutes);
 app.use('/api', routes);
 app.use('/api-docs', swagger.serve, swagger.setup(swaggerSpec));

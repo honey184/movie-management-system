@@ -1,6 +1,5 @@
 const cron = require("node-cron");
 const { redisClient } = require("../config/db");
-const Review = require("../models/review.model");
 
 cron.schedule("0 * * * *", async () => {
 
