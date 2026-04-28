@@ -65,6 +65,9 @@ async function loadBookings() {
 function renderBookings() {
     const listEl = document.getElementById('bookings-list');
     const emptyEl = document.getElementById('bookings-empty');
+    const emptyTitleEl = emptyEl.querySelector('h3');
+    const emptyTextEl = emptyEl.querySelector('p');
+    const emptyLinkEl = emptyEl.querySelector('a');
 
     // Filter bookings
     let filteredBookings = allBookings;
@@ -73,13 +76,30 @@ function renderBookings() {
     }
 
     if (filteredBookings.length === 0) {
+        listEl.innerHTML = '';
         listEl.classList.add('hidden');
         emptyEl.classList.remove('hidden');
+
+        if (currentFilter === 'confirmed') {
+            emptyTitleEl.textContent = 'No confirmed bookings';
+            emptyTextEl.textContent = 'You do not have any confirmed bookings right now.';
+            emptyLinkEl.classList.add('hidden');
+        } else if (currentFilter === 'cancelled') {
+            emptyTitleEl.textContent = 'No cancelled bookings';
+            emptyTextEl.textContent = 'You have not cancelled any bookings.';
+            emptyLinkEl.classList.add('hidden');
+        } else {
+            emptyTitleEl.textContent = 'No bookings yet';
+            emptyTextEl.textContent = 'Start by booking a movie from our collection.';
+            emptyLinkEl.classList.remove('hidden');
+        }
+
         return;
     }
 
     listEl.classList.remove('hidden');
     emptyEl.classList.add('hidden');
+    emptyLinkEl.classList.remove('hidden');
 
     listEl.innerHTML = filteredBookings.map(booking => createBookingCard(booking)).join('');
 
