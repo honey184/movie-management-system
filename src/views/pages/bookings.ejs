@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="section">
+        <div class="container">
+            <div class="page-top">
+                <div>
+                    <span class="eyebrow">Private Area</span>
+                    <h1>My Bookings</h1>
+                </div>
+                <div class="booking-stats" id="booking-stats">
+                    <span id="total-bookings">0 bookings</span>
+                </div>
+            </div>
+
+            <!-- Booking Status Filter -->
+            <div class="booking-filters">
+                <button class="filter-btn active" data-status="all">All</button>
+                <button class="filter-btn" data-status="confirmed">Confirmed</button>
+                <button class="filter-btn" data-status="cancelled">Cancelled</button>
+                <button class="filter-btn" data-status="pending">Pending</button>
+            </div>
+
+            <!-- Bookings List -->
+            <div id="bookings-list" class="booking-list">
+                <!-- Bookings will be loaded here via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="bookings-empty">
+                <h3>No bookings yet</h3>
+                <p>Start by booking a movie from our collection.</p>
+                <a href="/movies" class="btn btn-primary">Browse Movies</a>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state hidden" id="bookings-loading">
+                <div class="spinner"></div>
+                <p>Loading your bookings...</p>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+    <script src="/js/booking.js"></script>
+</body>
+
+</html>

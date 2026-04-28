@@ -54,6 +54,59 @@
                         data-movie-id="<%= movie._id %>">
                         Add to Watchlist
                     </button>
+                    <button
+                        class="btn btn-secondary"
+                        id="show-booking-form-btn"
+                        data-movie-id="<%= movie._id %>">
+                        Book Tickets
+                    </button>
+                </div>
+
+                <!-- Booking Form (Hidden by default) -->
+                <div class="booking-form-container hidden" id="booking-form-container">
+                    <h3>Book Tickets</h3>
+                    <form id="booking-form" class="stack-form">
+                        <input type="hidden" name="movieId" value="<%= movie._id %>">
+                        
+                        <div class="form-group">
+                            <label for="showDate">Show Date</label>
+                            <input type="date" name="showDate" id="showDate" required min="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="showTime">Show Time</label>
+                            <select name="showTime" id="showTime" required>
+                                <option value="">Select show time</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                                <option value="22:00">10:00 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="seats">Number of Seats</label>
+                            <input type="number" name="seats" id="seats" min="1" max="10" value="1" required>
+                            <small class="form-hint">Maximum 10 seats per booking</small>
+                        </div>
+
+                        <div class="booking-price">
+                            <span>Price per ticket: ₹150</span>
+                            <strong id="total-price">Total: ₹150</strong>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="book-tickets-btn">
+                                Confirm Booking
+                            </button>
+                            <button type="button" class="btn btn-ghost" id="cancel-booking-form-btn">
+                                Cancel
+                            </button>
+                        </div>
+
+                        <p class="form-message" id="booking-message"></p>
+                    </form>
                 </div>
             </section>
 

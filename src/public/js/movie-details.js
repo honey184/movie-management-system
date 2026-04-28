@@ -8,10 +8,28 @@ let existingReview = null;
 
 const reviewMessage = document.getElementById('review-message');
 
+// Booking form elements
+const showBookingFormBtn = document.getElementById('show-booking-form-btn');
+const bookingFormContainer = document.getElementById('booking-form-container');
+const bookingForm = document.getElementById('booking-form');
+const cancelBookingFormBtn = document.getElementById('cancel-booking-form-btn');
+const bookingMessage = document.getElementById('booking-message');
+const seatsInput = document.getElementById('seats');
+const totalPriceEl = document.getElementById('total-price');
+const showDateInput = document.getElementById('showDate');
+
+const TICKET_PRICE = 150;
+
 const setReviewMessage = (message, type) => {
     if (!reviewMessage) return;
     reviewMessage.textContent = message;
     reviewMessage.className = `form-message ${type}`;
+};
+
+const setBookingMessage = (message, type) => {
+    if (!bookingMessage) return;
+    bookingMessage.textContent = message;
+    bookingMessage.className = `form-message ${type}`;
 };
 
 const requireLogin = () => {
@@ -46,6 +64,76 @@ const setReviewMode = (review) => {
     deleteReviewBtn.classList.remove('hidden');
     reviewForm.rating.value = String(review.rating || '');
     reviewForm.comment.value = review.comment || '';
+};
+
+// Booking form handlers
+const initBookingForm = () => {
+    if (!showBookingFormBtn || !bookingFormContainer) return;
+
+    // Set minimum date to today
+    if (showDateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        showDateInput.setAttribute('min', today);
+    }
+
+    // Show booking form
+    showBookingFormBtn.addEventListener('click', () => {
+        if (!requireLogin()) return;
+        bookingFormContainer.classList.remove('hidden');
+        showBookingFormBtn.classList.add('hidden');
+    });
+
+    // Hide booking form
+    cancelBookingFormBtn?.addEventListener('click', () => {
+        bookingFormContainer.classList.add('hidden');
+        showBookingFormBtn.classList.remove('hidden');
+        setBookingMessage('', '');
+    });
+
+    // Update total price when seats change
+    seatsInput?.addEventListener('input', () => {
+        const seats = parseInt(seatsInput.value) || 1;
+        if (totalPriceEl) {
+            totalPriceEl.textContent = `Total: ₹${seats * TICKET_PRICE}`;
+        }
+    });
+
+    // Handle booking form submission
+    bookingForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        if (!requireLogin()) return;
+
+        const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+        const submitBtn = document.getElementById('book-tickets-btn');
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Booking...';
+
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${movieToken}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) throw new Error(result.message || 'Unable to book tickets');
+
+            setBookingMessage('Booking confirmed! Redirecting...', 'success');
+            window.setTimeout(() => {
+                window.location.href = '/bookings';
+            }, 1000);
+        } catch (error) {
+            setBookingMessage(error.message, 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Confirm Booking';
+        }
+    });
 };
 
 const loadMyReview = async () => {
@@ -163,4 +251,7 @@ deleteReviewBtn?.addEventListener('click', async () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', loadMyReview);
+document.addEventListener('DOMContentLoaded', () => {
+    loadMyReview();
+    initBookingForm();
+});

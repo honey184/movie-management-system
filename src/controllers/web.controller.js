@@ -178,3 +178,7 @@ exports.renderAdminEditMovie = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.renderBookings = (req, res) => {
+    res.render('pages/bookings', buildPageMeta('My Bookings', req.path));
+};
