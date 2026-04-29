@@ -105,6 +105,8 @@ const initBookingForm = () => {
         if (!requireLogin()) return;
 
         const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+        payload.movie = payload.movie || showBookingFormBtn?.dataset.movieId;
+
         const submitBtn = document.getElementById('book-tickets-btn');
 
         try {

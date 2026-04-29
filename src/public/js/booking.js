@@ -119,7 +119,7 @@ function createBookingCard(booking) {
     });
 
     const statusClass = `status-${booking.status}`;
-    const canCancel = booking.status === 'confirmed' && new Date(booking.showDate) > new Date();
+    const canCancel = booking.status === 'confirmed';
 
     return `
         <article class="booking-card ${statusClass}">
