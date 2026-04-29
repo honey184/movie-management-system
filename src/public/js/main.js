@@ -25,6 +25,29 @@ const createAuthHeaders = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const setupThemeToggle = () => {
+    const THEME_KEY = 'moviehub_theme';
+    const toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+
+    const applyTheme = (theme) => {
+        const isLight = theme === 'light';
+        document.body.classList.toggle('light-theme', isLight);
+        toggle.setAttribute('aria-pressed', String(isLight));
+        toggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+        toggle.querySelector('.theme-toggle__text').textContent = isLight ? 'Dark' : 'Light';
+    };
+
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+    applyTheme(savedTheme);
+
+    toggle.addEventListener('click', () => {
+        const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+    });
+};
+
 const createMovieCard = (movie) => {
     const article = document.createElement('article');
     article.className = 'movie-card';
@@ -323,6 +346,7 @@ const updateNavAuthState = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    setupThemeToggle();
     updateNavAuthState();
     loadAnalyticsDashboard();
     loadHeaderUserInfo();

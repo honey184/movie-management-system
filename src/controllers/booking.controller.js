@@ -2,13 +2,13 @@ const bookingService = require('../services/booking.service');
 const asyncHandler = require('../utils/asyncHandler');
 
 exports.createBooking = asyncHandler(async (req, res) => {
-    const { movieId, showDate, showTime, seats } = req.body;
+    const { movie, showDate, showTime, seats } = req.body;
 
     const bookingData = {
-        movieId,
+        movieId: movie,
         showDate,
         showTime,
-        seats: parseInt(seats)
+        seats
     };
 
     const booking = await bookingService.createBooking(req.user._id, bookingData);

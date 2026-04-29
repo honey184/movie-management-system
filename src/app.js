@@ -21,6 +21,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Set user info in res.locals for EJS templates
+// app.use((req, res, next) => {
+//     res.locals.user = null;
+//     const token = req.headers.authorization?.split(' ')[1] || req.cookies?.token;
+//     if (token) {
+//         try {
+//             const jwt = require('jsonwebtoken');
+//             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//             res.locals.user = decoded;
+//         } catch (error) {
+//             // Invalid token, user remains null
+//         }
+//     }
+//     next();
+// });
+
 // Prevent caching of HTML pages to handle logout/back button issue
 app.use((req, res, next) => {
     if (req.accepts('html')) {

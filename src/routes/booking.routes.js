@@ -13,8 +13,9 @@ router.use(authMiddleware);
  *   post:
  *     summary: Create a new booking
  *     tags: [Bookings]
+ *     description: Requires JWT token
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -26,11 +27,9 @@ router.use(authMiddleware);
  *               - showDate
  *               - showTime
  *               - seats
- *               - totalPrice
  *             properties:
  *               movie:
  *                 type: string
- *                 description: Movie ID
  *                 example: "64f1c2a5e123456789abcd01"
  *               showDate:
  *                 type: string
@@ -44,20 +43,12 @@ router.use(authMiddleware);
  *                 type: integer
  *                 minimum: 1
  *                 maximum: 10
- *                 example: 3
- *               totalPrice:
- *                 type: number
- *                 minimum: 0
- *                 example: 750
+ *                 example: 2
  *     responses:
  *       201:
  *         description: Booking created successfully
- *       400:
- *         description: Validation error
  *       401:
- *         description: Unauthorized
- *       500:
- *         description: Server error
+ *         description: Unauthorized (Token missing or invalid)
  */
 router.post('/', validate(createBookingSchema), bookingController.createBooking);
 
@@ -68,7 +59,7 @@ router.post('/', validate(createBookingSchema), bookingController.createBooking)
  *     summary: Get all bookings of logged-in user
  *     tags: [Bookings]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of user bookings
@@ -86,6 +77,8 @@ router.get('/my-bookings', bookingController.getMyBookings);
  *   get:
  *     summary: Get booking details by ID
  *     tags: [Bookings]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookingId
@@ -96,10 +89,10 @@ router.get('/my-bookings', bookingController.getMyBookings);
  *     responses:
  *       200:
  *         description: Booking details fetched successfully
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Booking not found
- *       500:
- *         description: Server error
  */
 router.get('/:bookingId', bookingController.getBookingById);
 
@@ -118,7 +111,7 @@ router.get('/:bookingId', bookingController.getBookingById);
  *           type: string
  *         description: Booking ID
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Booking cancelled successfully

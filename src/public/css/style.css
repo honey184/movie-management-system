@@ -1,19 +1,40 @@
 :root {
     --bg: #050505;
     --bg-elevated: #0f0f0f;
-    --surface: linear-gradient(180deg, rgba(24, 24, 24, 0.96), rgba(12, 12, 12, 0.94));
+    --surface: #111111;
     --surface-strong: #171717;
     --text: #ffffff;
-    --muted: #ffffff;
+    --muted: #cfcfcf;
+    --text-on-accent: #ffffff;
+    --input-bg: #141414;
+    --header-bg: #050505;
+    --soft-bg: #0b0b0b;
     --border: rgba(255, 255, 255, 0.12);
-    --accent: #e50914;
-    --accent-dark: #b20710;
+    --accent: #e50914d7;
+    --accent-dark: #a7030c;
     --accent-soft: rgba(229, 9, 20, 0.16);
     --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     --radius-lg: 24px;
     --radius-md: 18px;
     --radius-sm: 12px;
     --container: 1250px;
+}
+
+body.light-theme {
+    --bg: #ffffff;
+    --bg-elevated: #f6f6f6;
+    --surface: #ffffff;
+    --surface-strong: #f2f2f2;
+    --text: #111111;
+    --muted: #555555;
+    --input-bg: #ffffff;
+    --header-bg: #ffffff;
+    --soft-bg: #fafafa;
+    --border: rgba(0, 0, 0, 0.14);
+    --accent: #d00000;
+    --accent-dark: #990000;
+    --accent-soft: rgba(208, 0, 0, 0.12);
+    --shadow: 0 16px 42px rgba(0, 0, 0, 0.12);
 }
 
 * {
@@ -28,27 +49,12 @@ body {
     margin: 0;
     font-family: 'IBM Plex Sans', sans-serif;
     color: var(--text);
-    background:
-        radial-gradient(circle at top center, rgba(238, 6, 17, 0.26), transparent 30%),
-        radial-gradient(circle at left, rgba(228, 8, 19, 0.253), transparent 22%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.82), transparent 18%),
-        var(--bg);
+    background: var(--bg);
     min-height: 100vh;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7)),
-        repeating-linear-gradient(90deg,
-            rgba(255, 255, 255, 0.015) 0,
-            rgba(255, 255, 255, 0.015) 1px,
-            transparent 1px,
-            transparent 120px);
-    opacity: 0.8;
+    content: none;
 }
 
 a {
@@ -70,7 +76,7 @@ img {
     top: 0;
     z-index: 20;
     backdrop-filter: blur(20px);
-    background: rgba(5, 5, 5, 0.82);
+    background: var(--header-bg);
     border-bottom: 1px solid var(--border);
 }
 
@@ -118,7 +124,7 @@ h3 {
 .brand {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .site-nav {
@@ -147,7 +153,7 @@ h3 {
 .cast-list p,
 .admin-item p,
 .auth-switch {
-    color: #ffffff;
+    color: var(--text);
 }
 
 .site-nav a.active {
@@ -157,7 +163,7 @@ h3 {
 .site-nav a:hover,
 .card-link:hover,
 .section-heading a:hover {
-    color: #ffffff;
+    color: var(--text);
 }
 
 .btn {
@@ -181,8 +187,8 @@ h3 {
 }
 
 .btn-primary {
-    background: linear-gradient(180deg, #ef1d28, #b20710);
-    color: #ffffff;
+    background: var(--accent);
+    color: var(--text-on-accent);
     border-color: transparent;
     box-shadow: 0 12px 30px rgba(229, 9, 20, 0.26);
 }
@@ -192,8 +198,8 @@ h3 {
 }
 
 .btn-ghost {
-    background: rgba(255, 255, 255, 0.04);
-    color: #ffffff;
+    background: var(--surface-strong);
+    color: var(--text);
 }
 
 .hero,
@@ -202,7 +208,7 @@ h3 {
 }
 
 .section-soft {
-    background: linear-gradient(180deg, rgba(30, 0, 0, 0.25), rgba(0, 0, 0, 0.08));
+    background: var(--soft-bg);
 }
 
 .hero-grid,
@@ -241,8 +247,58 @@ h3 {
 
 .header-user span {
     font-size: 0.76rem;
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--muted);
     line-height: 1.2;
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-strong);
+    color: var(--text);
+    padding: 0.45rem 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+}
+
+.theme-toggle__track {
+    position: relative;
+    width: 42px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
+
+.theme-toggle__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.2s ease;
+}
+
+.light-theme .theme-toggle__thumb {
+    transform: translateX(20px);
+}
+
+.theme-toggle__text {
+    min-width: 34px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .admin-edit-shell {
@@ -280,7 +336,7 @@ h3 {
 .review-card,
 .empty-state {
     background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
 }
@@ -304,13 +360,13 @@ h3 {
     padding: 1rem;
     border-radius: var(--radius-md);
     background: var(--surface-strong);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
 }
 
 .hero-panel span,
 .detail-meta span {
     display: block;
-    color: #ffffff;
+    color: var(--muted);
     font-size: 0.7rem;
 }
 
@@ -336,8 +392,8 @@ h3 {
     padding: 0.65rem 1rem;
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
+    background: var(--surface-strong);
+    color: var(--text);
     text-transform: capitalize;
     cursor: pointer;
     transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
@@ -349,7 +405,8 @@ h3 {
 }
 
 .genre-filter__btn.active {
-    background: linear-gradient(180deg, #ef1d28, #b20710);
+    background: var(--accent);
+    color: var(--text-on-accent);
     border-color: transparent;
 }
 
@@ -385,7 +442,7 @@ h3 {
     border-radius: 999px;
     font-size: 0.85rem;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--accent);
     border: 1px solid rgba(229, 9, 20, 0.24);
 }
 
@@ -409,7 +466,7 @@ h3 {
 
 .analytics-status {
     margin: 0;
-    color: rgba(255, 255, 255, 0.76);
+    color: var(--muted);
 }
 
 .filters,
@@ -449,25 +506,25 @@ textarea {
     padding: 0.95rem 1rem;
     border-radius: 14px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--input-bg);
     color: var(--text);
 }
 
 select {
-    background: #141414 !important;
-    background-color: #141414 !important;
-    color: #ffffff;
+    background: var(--input-bg) !important;
+    background-color: var(--input-bg) !important;
+    color: var(--text);
 }
 
 option {
-    background: #141414 !important;
-    background-color: #141414 !important;
-    color: #ffffff;
+    background: var(--input-bg) !important;
+    background-color: var(--input-bg) !important;
+    color: var(--text);
 }
 
 input::placeholder,
 textarea::placeholder {
-    color: #f3f3f3;
+    color: var(--muted);
 }
 
 input:focus,
@@ -496,7 +553,7 @@ textarea:focus {
     padding: 1rem;
     background: var(--surface-strong);
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
 }
 
 .lead {
@@ -535,7 +592,7 @@ textarea:focus {
 
 .auth-switch {
     margin-top: 1rem;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .form-message {
@@ -564,14 +621,14 @@ textarea:focus {
     padding: 1rem;
     border-radius: var(--radius-md);
     background: var(--surface-strong);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
 }
 
 .admin-badge {
     padding: 0.5rem 0.9rem;
     border-radius: 999px;
     background: var(--accent-soft);
-    color: #ffffff;
+    color: var(--accent);
     font-weight: 800;
 }
 
@@ -596,7 +653,7 @@ textarea:focus {
 
 .admin-item p {
     margin: 0;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .admin-actions {
@@ -607,7 +664,7 @@ textarea:focus {
 .site-footer,
 .site-footer p,
 .site-footer h3 {
-    color: #f0f0f0;
+    color: var(--muted);
 }
 
 .site-footer {
@@ -703,7 +760,7 @@ textarea:focus {
     border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--accent);
     border: 1px solid rgba(229, 9, 20, 0.24);
 }
 
@@ -719,8 +776,8 @@ textarea:focus {
     padding: 0.65rem 1.2rem;
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
+    background: var(--surface-strong);
+    color: var(--text);
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
@@ -734,7 +791,8 @@ textarea:focus {
 }
 
 .filter-btn.active {
-    background: linear-gradient(180deg, #ef1d28, #b20710);
+    background: var(--accent);
+    color: var(--text-on-accent);
     border-color: transparent;
     box-shadow: 0 8px 20px rgba(229, 9, 20, 0.26);
 }
@@ -748,7 +806,7 @@ textarea:focus {
 /* Booking Card */
 .booking-card {
     background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     padding: 1.5rem;
@@ -757,7 +815,7 @@ textarea:focus {
 
 .booking-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--accent);
 }
 
 .booking-header {
@@ -778,7 +836,7 @@ textarea:focus {
 
 .booking-genre {
     font-size: 0.85rem;
-    color: #ffffff;
+    color: var(--muted);
 }
 
 /* Booking Status */
@@ -821,13 +879,13 @@ textarea:focus {
     padding: 0.9rem;
     background: var(--surface-strong);
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
 }
 
 .detail-label {
     display: block;
     font-size: 0.72rem;
-    color: #ffffff;
+    color: var(--muted);
     margin-bottom: 0.3rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -836,7 +894,7 @@ textarea:focus {
 
 .detail-item strong {
     font-size: 1.1rem;
-    color: #ffffff;
+    color: var(--text);
 }
 
 /* Booking Footer */
@@ -851,7 +909,7 @@ textarea:focus {
 
 .booking-date {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--muted);
 }
 
 .booking-footer .btn {
@@ -864,7 +922,7 @@ textarea:focus {
     margin-top: 1.5rem;
     padding: 1.5rem;
     background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
 }
@@ -883,7 +941,7 @@ textarea:focus {
     margin-bottom: 0.4rem;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .booking-form-container input,
@@ -892,8 +950,8 @@ textarea:focus {
     padding: 0.8rem 1rem;
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
+    background: var(--input-bg);
+    color: var(--text);
     font-size: 0.95rem;
 }
 
@@ -907,7 +965,7 @@ textarea:focus {
     display: block;
     margin-top: 0.3rem;
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--muted);
 }
 
 .booking-price {
@@ -918,12 +976,12 @@ textarea:focus {
     background: var(--surface-strong);
     border-radius: var(--radius-md);
     margin: 1rem 0;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
 }
 
 .booking-price span {
     font-size: 0.9rem;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .booking-price strong {
@@ -941,7 +999,7 @@ textarea:focus {
     width: 40px;
     height: 40px;
     margin: 0 auto 1rem;
-    border: 3px solid rgba(255, 255, 255, 0.1);
+    border: 3px solid var(--border);
     border-top-color: var(--accent);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -954,7 +1012,7 @@ textarea:focus {
 }
 
 .loading-state p {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--muted);
     font-size: 0.95rem;
 }
 
@@ -975,14 +1033,14 @@ textarea:focus {
 
 /* Button Secondary */
 .btn-secondary {
-    background: linear-gradient(180deg, #3a3a3a, #1a1a1a);
-    color: #ffffff;
+    background: var(--surface-strong);
+    color: var(--text);
     border-color: transparent;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-secondary:hover {
-    background: linear-gradient(180deg, #4a4a4a, #2a2a2a);
+    background: var(--bg-elevated);
 }
 
 /* Responsive Booking */

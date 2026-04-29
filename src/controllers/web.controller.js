@@ -61,7 +61,7 @@ exports.renderMovies = async (req, res, next) => {
     try {
         const query = {
             page: req.query.page || 1,
-            limit: req.query.limit || 12,
+            limit: req.query.limit || 10,
         };
 
         if (req.query.genre) query.genre = req.query.genre;
@@ -75,7 +75,7 @@ exports.renderMovies = async (req, res, next) => {
         const movies = data.movies || [];
         const pagination = {
             page: data.page || Number(req.query.page) || 1,
-            limit: data.limit || Number(req.query.limit) || 12,
+            limit: data.limit || Number(req.query.limit) || 10,
             hasPrev: (data.page || 1) > 1,
             hasNext: (data.page * data.limit) < data.total
         };
