@@ -291,6 +291,7 @@ const updateNavAuthState = () => {
         removeNode('#analytics-nav-link');
         removeNode('#movies-nav-link');
         removeNode('#watchlist-nav-link');
+        removeNode('#bookings-nav-link');
     }
 
     if (isAdmin && siteNav && !document.getElementById('admin-nav-link')) {
